@@ -1,0 +1,49 @@
+@MakeLabelTable -labeltable lt   \
+                -lab_v OUT_0 1   \
+                -lab_v CSF_0 11  \
+                -lab_v GM_0  21  \
+                -lab_v WM_0  31  \
+                -lab_v MEN_0 41  \
+                -lab_v MAR_0 51  \
+                -lab_v SK_0  61
+
+3dcalc -overwrite -datum short -a full_space_mask+orig -expr 'step(a)*1' -prefix OUT_0
+3dcalc -overwrite -datum short -a csf_mask1+orig -expr 'step(a)*11' -prefix CSF_0
+3dcalc -overwrite -datum short -a gm_mask+orig -expr 'step(a)*21' -prefix GM_0
+3dcalc -overwrite -datum short -a wm_mask+orig -expr 'step(a)*31' -prefix WM_0
+3dcalc -overwrite -datum short -a dura_mask+orig -expr 'step(a)*41' -prefix MEN_0
+3dcalc -overwrite -datum short -a bone_marrow+orig. -expr 'step(a)*51' -prefix MAR_0
+3dcalc -overwrite -datum short -a full_skin_mask+orig. -expr 'step(a)*61' -prefix SK_0
+
+~/3dGenFeatureDist  -classes 'OUT_0; CSF_0; GM_0; WM_0; MEN_0; MAR_0; SK_0' \
+                     -features 'fl; t1_1; t1_2; t1_3; t1_4; wt_rs; mtc_1; mtc_2; mtc_3' \
+                     -sig all_s+orig.HEAD \
+                     -samp 'OUT_0+orig.HEAD CSF_0+orig.HEAD GM_0+orig.HEAD \
+                            WM_0+orig.HEAD MEN_0+orig.HEAD MAR_0+orig.HEAD \
+                            SK_0+orig.HEAD'  \
+                     -labeltable lt.niml.lt \
+                     -prefix ttt
+~/@ExamineGenFeatDists -fdir ttt -odir ttt
+
+set vd = 101010
+3dGenPriors -sig all_s+orig \
+            -do pc -tdist ttt/ -labeltable lt.niml.lt \
+            -mask t1_avg_alw+orig -debug 2 -vox_debug ${vd} \
+            -classes 'OUT_0; CSF_0; GM_0; WM_0; MEN_0; MAR_0; SK_0' \
+            -features 'fl; t1_1; t1_2; t1_3; t1_4; wt_rs; mtc_1; mtc_2; mtc_3'  \
+            -featexponent by_featgroups -featgroups 'fl t1 wt_rs mtc' \
+            -uid HV1.EE \
+            -prefix wildf.EE -vox_debug_file ${vd}.EE.dbg \
+            -overwrite 
+
+## USE ON A DIFFERENT ALIGNED SET OF IMAGES
+set vd = 101010
+3dGenPriors -sig all_s+orig \
+            -do pc -tdist ../../a20130227/HH/ttt/ -labeltable ../../a20130227/HH/lt.niml.lt \
+            -mask t1_avg_alw+orig -debug 2 -vox_debug ${vd} \
+            -classes 'OUT_0; CSF_0; GM_0; WM_0; MEN_0; MAR_0; SK_0' \
+            -features 'fl; t1_1; t1_2; t1_3; t1_4; wt_rs; mtc_1; mtc_2; mtc_3'  \
+            -featexponent by_featgroups -featgroups 'fl t1 wt_rs mtc' \
+            -uid HV2.EE \
+            -prefix wildf.EE -vox_debug_file ${vd}.EE.dbg \
+            -overwrite 
