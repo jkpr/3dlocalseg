@@ -8,7 +8,7 @@
                 -lab_v SK_0  61
 
 3dcalc -overwrite -datum short -a full_space_mask+orig -expr 'step(a)*1' -prefix OUT_0
-3dcalc -overwrite -datum short -a csf_mask1+orig -expr 'step(a)*11' -prefix CSF_0
+3dcalc -overwrite -datum short -a csf_mask2+orig -expr 'step(a)*11' -prefix CSF_0
 3dcalc -overwrite -datum short -a gm_mask+orig -expr 'step(a)*21' -prefix GM_0
 3dcalc -overwrite -datum short -a wm_mask+orig -expr 'step(a)*31' -prefix WM_0
 3dcalc -overwrite -datum short -a dura_mask+orig -expr 'step(a)*41' -prefix MEN_0
