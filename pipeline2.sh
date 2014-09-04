@@ -130,9 +130,10 @@ end
 # H) Scale T1 echoes by Calc_MPRAGE percentiles
 foreach IMAGE (${T1_ECHO}?+orig.HEAD)
     set p = `ParseName -out Prefix $IMAGE`
-    3dcalc -a ${p}${ALIGN}${ZERO}+orig \
-           -b ${CALC_RAGE}${ALIGN}${LOC_STAT}+orig'[perc:90.00]' \
-           -expr 'step(b)*a/b' -prefix ${p}${SCALE}
+
+    3dcalc -a ${CALC_RAGE}${ALIGN}${LOC_STAT}+orig'[perc:90.00]' \
+           -b ${p}${ALIGN}${ZERO}+orig \
+           -expr 'step(a)*b/a' -prefix ${p}${SCALE}
 end
 
 # ALTERNATIVE: Scale by T1 echoes' own percentiles
@@ -146,24 +147,24 @@ end
 # Cont'd) Scale MTC images by themselves
 foreach IMAGE (${MTC}?+orig.HEAD)
     set p = `ParseName -out Prefix $IMAGE`
-    3dcalc -a ${p}${ALIGN}${ZERO}+orig \
-           -b ${p}${ALIGN}${LOC_STAT}+orig'[perc:90.00]' \
-           -expr 'step(b)*a/b' -prefix ${p}${SCALE}
+    3dcalc -a ${p}${ALIGN}${LOC_STAT}+orig'[perc:90.00]' \
+           -b ${p}${ALIGN}${ZERO}+orig \
+           -expr 'step(a)*b/a' -prefix ${p}${SCALE}
 end
 
 # Cont'd) Scale Calc_MPRAGE by CALC_MPRAGE percentiles
-3dcalc -a ${CALC_RAGE}${ALIGN}${ZERO}+orig \
-       -b ${CALC_RAGE}${ALIGN}${LOC_STAT}+orig'[perc:90.00]' \
-       -expr 'step(b)*a/b' -prefix ${CALC_RAGE}${SCALE}
+3dcalc -a ${CALC_RAGE}${ALIGN}${LOC_STAT}+orig'[perc:90.00]' \
+       -b ${CALC_RAGE}${ALIGN}${ZERO}+orig \
+       -expr 'step(a)*b/a' -prefix ${CALC_RAGE}${SCALE}
 
 # Cont'd) ...and the same for FLAIR, scale by iteself
-3dcalc -a ${FLAIR}${ALIGN}${ZERO}+orig \
-       -b ${FLAIR}${ALIGN}${LOC_STAT}+orig'[perc:90.00]' \
-       -expr 'step(b)*a/b' -prefix ${FLAIR}${SCALE}
+3dcalc -a ${FLAIR}${ALIGN}${LOC_STAT}+orig'[perc:90.00]' \
+       -b ${FLAIR}${ALIGN}${ZERO}+orig \
+       -expr 'step(a)*b/a' -prefix ${FLAIR}${SCALE}
 
 # Cont'd) ...and the same for the water image, scale by itself
-3dcalc -a ${WATER}+orig -b ${WATER}${LOC_STAT}+orig'[perc:70.00]' \
-       -expr 'step(b)*a/b' \
+3dcalc -a ${WATER}${LOC_STAT}+orig'[perc:70.00]' -b ${WATER}+orig  \
+       -expr 'step(a)*b/a' \
        -prefix ${WATER}${SCALE}
 
 # I) Resample the scaled water image so it is the same size as the rest and 
@@ -186,7 +187,7 @@ set cl_s = (${FLAIR}${SCALE}+orig.HEAD ${T1_ECHO}?${SCALE}+orig.HEAD \
           ${WATER}${RESAMPLE}${SCALE}+orig.HEAD ${MTC}?${SCALE}+orig.HEAD)
 3dTcat   -relabel -prefix all_s $cl_s
 if ( -f feats.txt ) rm -f feats.txt
-foreach l ($cl)
+foreach l ($cl_s)
   echo $l | sed "s/${SCALE}+orig.HEAD//g" >> feats.txt
 end
 3drefit -relabel_all feats.txt all_s+orig.HEAD
@@ -199,3 +200,24 @@ set cl_us = (${FLAIR}${ALIGN}+orig.HEAD \
 3dTcat   -relabel -prefix all_us $cl_us
 3drefit -relabel_all feats.txt all_us+orig.HEAD
 
+# GET MORE STATS
+set nbhds = {2,4,6}
+foreach i ( $nbhds )
+  3dLocalstat -nbhd "SPHERE($i)" -stat stdev -prefix ls_${i}_stdev all_s+orig
+  3dLocalstat -nbhd "SPHERE($i)" -stat MAD -prefix ls_${i}_mad all_s+orig
+  3dLocalstat -nbhd "SPHERE($i)" -stat P2skew -prefix ls_${i}_skew all_s+orig
+end
+
+
+set stat_type = {stdev,mad,skew}
+set subbrick = {0,1,2,3,4,5,6,7,8}
+foreach i ( $nbhds )
+  foreach j ( $stat_type )
+    foreach k ( $subbrick )
+      echo "${j}_${i}[${k}]" >> ${j}${i}.txt
+    end
+    3drefit -relabel_all ${j}${i}.txt ls_${i}_${j}+orig
+  end
+end
+
+3drefit -relabel_all ls_${i}_${j}+orig

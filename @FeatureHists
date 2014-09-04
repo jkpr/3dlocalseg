@@ -1,0 +1,277 @@
+#!/bin/tcsh -f
+
+@global_parse `basename $0` "$*" ; if ($status) exit 0
+set stat = 0
+set stdir = $PWD
+
+goto PARSE
+RET_PARSE:
+
+MAKE_HISTOS:
+set allscr = ()
+set alljpg = ()
+set reflabs = `3dinfo -sb_delim ' ' -label $sigsvector[1]`
+foreach feat ($reflabs)
+   if ($#exclude > 0) then
+      foreach ex ($exclude) 
+         set jj = `echo $feat | \grep $ex`
+         if ($jj != '') then
+            echo "Skipping $feat"
+            goto NEXT
+         endif
+      end
+   endif
+   set cnt = 1
+   foreach dset ($sigsvector)
+      set mopt = ''
+      if ($#maskvector > 0) then
+         set mopt = "-mask $maskvector[$cnt]"
+      endif
+      3dhistog $mopt -pdf \
+               -min -3 -max 3 -prefix hh.${feat}.$cnt   \
+               $sigsvector[$cnt]"[${feat}]"
+      if ($cnt == 1) then
+         1dcat hh.${feat}.$cnt.1D'[0,1]' > hh.$feat.1D
+      else
+         1dcat  hh.$feat.1D hh.${feat}.$cnt.1D'[1]' > mmm.1D
+         mv mmm.1D hh.$feat.1D
+      endif 
+      \rm -f hh.${feat}.$cnt.1D
+      @ cnt ++
+   end
+   
+   set cvec = `count -digits 1 1 {$#sigsvector}`
+   set leg = `afni_util.py -listfunc list_minus_glob_form -join $sigsvector`
+   set com = ( -one -col.color $cvec -x "hh.$feat.1D[0]" \
+               -i "hh.$feat.1D[1..3]" -leg.names $leg -leg.show -leg.ncol 1 \
+               -xax.label $feat -title NONE)
+   echo "1dRplot '$com'  &" > @Show.$feat
+   chmod a+x @Show.$feat
+   set noglob
+   1dRplot $com -save hh.$feat.jpg  
+   unset noglob
+   set allscr = ($allscr @Show.$feat)
+   set alljpg = ($alljpg hh.$feat.jpg)
+   mv hh.$feat.jpg $odir/
+   mv @Show.$feat $odir/
+   mv hh.$feat.1D $odir/
+   
+   NEXT:
+end
+
+   set hist = "Produced from $PWD with: `basename $0` $argv[*]" 
+   echo $hist > $odir/README.command.$suff
+   
+   cd $odir/
+   cat $allscr > @Show.All.${suff}
+   chmod a+x @Show.All.${suff}
+   imcat -crop 0 0 100 0 -nx 4 -prefix hh.ALL.${suff}.jpg $alljpg
+   echo "Results now in $odir"
+   cd -
+   
+goto END
+
+PARSE:
+set Narg = $#
+set cnt = 1
+set starttime=`date`
+set resample = 1
+set sigsvector = ()
+set maskvector = ()
+set exclude = ()
+set cleanafter = 1
+set inmask = ""
+set odir = ''
+set olabel = 'loc_st'
+set sigset = 'sigset'
+set inputopen = 0
+set maskopen = 0
+set exclopen = 0
+set featmask = ''
+set suff = 'nosuf'
+if ("$1" == '') goto HELP
+while ($cnt <= $Narg)
+   set donext = 1
+
+   if ($donext && "$argv[$cnt]" == "-help" || "$argv[$cnt]" == "-h") then
+      goto HELP
+   endif
+   
+   if ($donext && ("$argv[$cnt]" == "-d" || "$argv[$cnt]" == "-echo")) then
+      set echo
+      set donext = 0   
+   endif
+
+
+   if ($donext && "$argv[$cnt]" == "-odir") then
+      if ($cnt == $Narg) then
+         echo "Need directory after -odir"
+         goto END
+      else
+         @ cnt ++
+         set odir = "$argv[$cnt]"
+         
+         set exclopen = 0
+         set inputopen = 0
+         set maskopen = 0
+         set donext = 0   
+      endif
+   endif
+
+   if ($donext && "$argv[$cnt]" == "-input") then
+      if ($cnt == $Narg) then
+         echo "Need volumes names after -input"
+         goto END
+      else
+         @ cnt ++
+         set maskopen = 0
+         set exclopen = 0
+         set inputopen = 1
+         set sigsvector = ($sigsvector $argv[$cnt])
+         set donext = 0   
+      endif
+   endif
+
+   if ($donext && "$argv[$cnt]" == "-mask") then
+      if ($cnt == $Narg) then
+         echo "Need volume(s) afer -mask"
+         goto END
+      else
+         @ cnt ++
+         set exclopen = 0
+         set inputopen = 0
+         set maskopen = 1
+         set maskvector = ($maskvector $argv[$cnt])
+         set donext = 0   
+      endif
+   endif
+
+   if ($donext && "$argv[$cnt]" == "-exclude") then
+      if ($cnt == $Narg) then
+         echo "Need features(s) afer -exclude"
+         goto END
+      else
+         @ cnt ++
+         set exclopen = 1
+         set inputopen = 0
+         set maskopen = 0
+         set exclude = ($exclude $argv[$cnt])
+         set donext = 0   
+      endif
+   endif
+
+   if ($donext && "$argv[$cnt]" == "-suffix") then
+      if ($cnt == $Narg) then
+         echo "Need a output suffix after -suffix"
+         goto END
+      else
+         @ cnt ++
+         set suff = "$argv[$cnt]"
+         set exclopen = 0
+         set inputopen = 0
+         set maskopen = 0
+         set donext = 0   
+      endif
+   endif
+   
+  if ($donext) then
+      if ($inputopen == 1) then
+         set sigsvector = ($sigsvector $argv[$cnt])
+         @ cnt ++
+      endif
+      if ($exclopen == 1) then
+         set exclude = ($exclude $argv[$cnt])
+         @ cnt ++
+      endif
+      if ($maskopen == 1) then
+         set maskvector = ($maskvector $argv[$cnt])
+         @ cnt ++
+      endif
+      if ($inputopen == 0 && $maskopen == 0 && $exclude == 0) then
+         echo "Parameter $argv[$cnt] not understood"
+         apsearch -popt `basename $0` -word $argv[$cnt]
+         goto END
+      endif
+   else 
+      @ cnt ++
+   endif 
+
+end
+
+#Check on input:
+if ($#sigsvector < 1) then
+   echo "No input"
+   goto BEND
+endif
+
+#output directory
+if ("$odir" == '') then
+   set odir = "./FeatureHists.$suff"
+endif
+if (! -d $odir) mkdir -p $odir
+if (! -d $odir) then
+   echo "Failed to create $odir"
+   goto END
+endif
+         
+#Label consistency
+set cnt = 0
+foreach inp ($sigsvector)
+   if ($cnt) then
+      set thislabs = `3dinfo -label $inp`
+      if ("$thislabs" != "$reflabs") then
+         echo "Feature mismatch between $inp and $sigsvector[1]"
+         goto BEND
+      endif
+   else
+      set reflabs = `3dinfo -label $inp`
+   endif
+   @ cnt ++
+end
+
+if ($#maskvector > 0 && $#maskvector != $#sigsvector) then
+   echo "Need as many masks as input volumes"
+   goto BEND
+endif
+
+goto RET_PARSE
+
+HELP:
+   echo ""
+   echo "Usage: `basename $0` <-input DSET1 [DSET2...]> "
+   echo "                     [<-mask STAT1 [STAT2...]>]"
+   echo " "
+   echo "Compute histograms of each feature from multiple dsets"
+   echo ""
+   echo "-input DSET1 [DSET2 ...]: input feature datasets"
+   echo "                          Multiple sub-bricks OK, multiple grids ok"
+   echo "-mask MASK1 [MASK2 ...]: mask dsets over which hists are formed. "
+   echo "                     must have as many masks as dsets and each"
+   echo "                     pair must have the same grid"
+   echo "-suffix SUFF: Output suffix, default nosuff"
+   echo "-exclude FEAT1 [FEAT2 ...]: Exclude following features. String matching"
+   echo "                            is partial"
+   echo "-odir DIR: Output directory, default is ./FeatureHists.SUFF"
+   echo "-echo: Set echo"
+   echo "-help: this message" 
+   echo ""
+   echo "Example:"
+   echo " @FeatureHists -input */anat.00?.sc9z.sigset+orig.HEAD \"
+   echo "               -mask anat.00?.am+orig.HEAD -suffix sc9z \"
+   echo "               -exclude mean "
+   echo ""
+   @global_parse -gopts_help
+   goto END
+
+goto END
+
+BEND:
+set stat = 1
+goto END
+
+END:
+exit $stat
+
+
+
+
