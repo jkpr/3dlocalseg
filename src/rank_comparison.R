@@ -78,6 +78,7 @@ ggsave(filename="quant.png", plot=p_s, width=15, height=20, units="in")
 
 #``````````````````````````,,,,,,,,,,,,,,,,,,,,,,,,,,,,,``````````````````````````
 
+# This code gets the unscaled stuff
 # Mount the drive first
 setwd("/Volumes/home/pringlejk")
 
