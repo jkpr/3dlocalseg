@@ -212,4 +212,5 @@ save_to_afni(afni_im2D, "results_mc13+orig")
 # 3drefit -newid results27+orig
 # 3drefit -newid results_mc27+orig
 # 3drefit -redo_bstat results_mc27+orig
+# 3drefit -redo_bstat results27+orig
 # @MakeLabelTable -lab_file labels.txt 0 1 -dset results_mc27+orig
