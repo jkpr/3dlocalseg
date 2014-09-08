@@ -1,6 +1,10 @@
 
 library(oro.nifti)
 library(nnet)
+source("/usr/local/afni/AFNIio.R")
+
+
+all_s2 <- read.AFNI("all_s+orig")
 
 gold <- readAFNI("gold+orig")
 wildf <- readAFNI("wildf.EE.c+orig")
@@ -17,7 +21,6 @@ image_names <- strsplit(all_s@BRICK_LABS,"~")[[1]]
 features <- apply(all_s, 4, as.vector)
 colnames(features) <- image_names
 df <- as.data.frame(features)
-df <- df[as.vector(hmask)==1,]
 df$y <- factor(as.vector(gold))
 levels(df$y) <- c("OTHER", "OUT", "CSF", "GM", "WM", "MEN", "MAR", "SK")
 df <- df[hmask==1,]
@@ -37,10 +40,24 @@ for (i in 1:8) {
   probs1[,,,i][hmask==1] <- prob1[,i]
 }
 
+write.AFNI("test2+orig", probs1, label=levels(df$y),
+           origin=all_s2$origin, delta=all_s2$delta, orient=all_s2$orient, view="+orig")
+
+
 res <- all_s
+res@.Data <- probs1
+res@BRICK_TYPES <- rep(3L,8)
+res@BRICK_STATS <- as.vector(apply(res, 4, range))
+res@BRICK_LABS  <- paste(levels(df$y), collapse="~")
+writeAFNI(res, fname="mlogit_probs+orig")
+
+
+
+
 res@.Data[,,,1] <- class1
 res@.Data[,,,2:9] <- probs1
-writeAFNI(res, fname="mlogit")
+
+writeAFNI(res, fname="mlogit_all+orig")
 
 
 
