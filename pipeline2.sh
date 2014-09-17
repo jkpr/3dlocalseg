@@ -220,4 +220,30 @@ foreach i ( $nbhds )
   end
 end
 
-3drefit -relabel_all ls_${i}_${j}+orig
+set cl_ls = (ls_?_*HEAD)
+3dTcat -prefix all_ls $cl_ls
+echo Done
+
+cd ../../a20130213/JJ
+set nbhds = {2,4,6}
+foreach i ( $nbhds )
+  3dLocalstat -nbhd "SPHERE($i)" -stat stdev -prefix ls_${i}_stdev all_s+orig
+  3dLocalstat -nbhd "SPHERE($i)" -stat MAD -prefix ls_${i}_mad all_s+orig
+  3dLocalstat -nbhd "SPHERE($i)" -stat P2skew -prefix ls_${i}_skew all_s+orig
+end
+
+
+set stat_type = {stdev,mad,skew}
+set subbrick = {0,1,2,3,4,5,6,7,8}
+foreach i ( $nbhds )
+  foreach j ( $stat_type )
+    foreach k ( $subbrick )
+      echo "${j}_${i}[${k}]" >> ${j}${i}.txt
+    end
+    3drefit -relabel_all ${j}${i}.txt ls_${i}_${j}+orig
+  end
+end
+
+set cl_ls = (ls_?_*HEAD)
+3dTcat -prefix all_ls $cl_ls
+echo Done
