@@ -1,14 +1,22 @@
 # UUoU calculations
 
-source("/Users/james/Documents/programming/AFNI/AFNIio.R")
-setwd("~/Google Drive/Documents/NIH")
-volume_all <- read.AFNI("edge_vol+orig.HEAD")
-volume <- drop(volume$brk)
-volume_vec <- volume_brk[volume_brk > 0]
+#source("/Users/james/Documents/programming/AFNI/AFNIio.R")
+#setwd("~/Google Drive/Documents/NIH")
+
+source("/Users/pringlejk/Documents/afni_files/AFNIio.R")
+setwd("~/Documents/NIH/")
+
+## Get edge for MTC#3 image
+## 3dedge3 -input all_s+orig[8] -prefix mtc_3_edge
+
+volume_all <- read.AFNI("a20130227/mtc_3_edge+orig.HEAD")
+volume <- drop(volume_all$brk)
+volume_vec <- volume[volume > 0]
 # 90 percentile of non-neg values divided by 3
 # or median?
 # Perhaps dilate and erode to help fill the little gaps?
 # Anterior commissure i,j,k = 1+(121,99,88)
+# seed <- c(122, 100, 89)
 
 get_seq_length <- function(volume_dimen, multiplier = 1)
 {
@@ -99,7 +107,7 @@ get_radius_points <- function(voxel, seed, voxel_dimen, volume_dimen)
     seq_multiples <- rep(get_seq(volume_dimen, scale_factor),each=length(vec))
     r_vec_multiples <- seq_multiples*vec
     r_vec_points <- first_pt + r_vec_multiples
-    radius_mat <- matrix(r_vec_points,ncol=length(new_r_vec),byrow=TRUE)
+    radius_mat <- matrix(r_vec_points,ncol=length(vec),byrow=TRUE)
     return(radius_mat)
 }
 
@@ -151,7 +159,11 @@ get_ijk_ratio <- function(voxel, seed, voxel_dimen, volume, cutoff)
         dist <- sqrt(sum(((ijk - seed)*voxel_dimen)*((ijk - seed)*voxel_dimen)))
         return(c(dist, intensity))
     }))
-    last_voxel_row <- max(which(radius_values[,2] > cutoff))
+    voxels_kept <- which(radius_values[,2] > cutoff)
+    last_voxel_row <- nrow(radius_values)
+    if (length(voxels_kept) > 0){
+        last_voxel_row <- max(voxels_kept)
+    }
     last_voxel_dist <- radius_values[last_voxel_row,1]
     stopifnot(last_voxel_dist > 0)
     ratios <- sapply(radius_values[,1], function(x) x/last_voxel_dist)
@@ -168,10 +180,13 @@ get_ratio_volume <- function(seed, voxel_dimen, volume, overwrite=FALSE)
     ratio_volume <- array(data= -1, dim=volume_dimen)
     for (i in 1:volume_dimen[1])
     {
-        for (j in 1:volume_dimen[2])
+      print(paste("i:",i))  
+      for (j in 1:volume_dimen[2])
         {
+            print(paste("j:",j))
             for (k in 1:volume_dimen[3])
             {
+                print((paste("k:",k)))
                 voxel <- c(i,j,k)
                 
                 # Skip this loop if the voxel is the seed
@@ -200,3 +215,8 @@ get_ratio_volume <- function(seed, voxel_dimen, volume, overwrite=FALSE)
     }
     return(ratio_volume)
 }
+
+start <- Sys.time()
+out <- get_ratio_volume(seed, c(1,1,1), volume)
+end <- Sys.time()
+end - start
