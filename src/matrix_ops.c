@@ -1,25 +1,4 @@
-/*
-gcc -Wall -o mat_ops matrix_ops.c
-*/
-
-#include <stdio.h>
-#include <math.h>
-#include unit_tests.h
-
-typedef struct
-{
-    double x;
-    double y;
-    double z;
-} xyz;
-
-typedef struct
-{
-    int i;
-    int j;
-    int k;
-} ijk;
-
+#include "matrix_ops.h"
 
 double get_distance(xyz a, xyz b)
 {
@@ -112,11 +91,4 @@ ijk xyz_to_ijk(xyz a, xyz voxel_dim)
         b.z = a.z - voxel_dim.z/10;
         return xyz_to_ijk(b, voxel_dim);
     }
-}
-
-int main()
-{
-    unit_tests();
-
-    return 0;
 }

@@ -1,5 +1,5 @@
 /*
-gcc -Wall -o mat_ops matrix_ops.c
+gcc -Wall -Iinc -o bin/mat_ops src/matrix_ops.c src/unit_tests.c src/matrix_main.c
 */
 
 #include "unit_tests.h"
