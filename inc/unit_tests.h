@@ -11,6 +11,8 @@ int report_ind_to_ijk(long ind, ijk volume_dim, ijk should_be);
 int test_xyz_to_ijk();
 int test_ijk_to_ind();
 
+short test_matrix();
+
 int unit_tests();
 
 #endif

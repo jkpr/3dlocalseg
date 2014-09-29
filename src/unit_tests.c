@@ -145,7 +145,7 @@ int test_ijk_to_ind()
     return p_all;
 }
 
-short test_another_func(void)
+short test_matrix()
 {
     short image[343] = { 0,0,0,0,0,0,0,3,3,3,0,0,0,0,3,3,3,0,0,0,0,
                          3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -164,7 +164,32 @@ short test_another_func(void)
                          0,0,0,0,0,0,0,0,4,4,4,4,0,0,0,4,4,4,4,0,0,
                          0,4,4,4,4,0,0,0,4,4,4,4,0,0,0,0,0,0,0,0,0,
                          0,0,0,0,0,0,0 };
+    long voxel = 0;
+    long seed = 150;
 
+    xyz voxel_dim = {1,1,1};
+    ijk volume_dim = {7,7,7};
+
+    seed = ijk_to_ind((ijk){3,3,3}, volume_dim);
+
+    
+
+    ijk a = ind_to_ijk(seed, volume_dim);
+    printf("ind to ijk, %ld to (%d, %d, %d)\n", seed, a.i, a.j, a.k);
+    a = ind_to_ijk(voxel, volume_dim);
+    printf("ind to ijk, %ld to (%d, %d, %d)\n", seed, a.i, a.j, a.k);
+
+
+
+    long_arr out = get_radius_inds(voxel, seed, voxel_dim, volume_dim);
+
+    printf("And the result vector location is %p\n", out.ptr);
+    for (int i = 0; i < out.size; i++)
+    {
+        printf("[%ld] = %d\n", out.ptr[i], image[out.ptr[i]]);
+    }
+
+    free(out.ptr);
     return image[0];
 }
 
@@ -173,6 +198,8 @@ int unit_tests()
     int p_all = 1;
     p_all = p_all & test_ijk_to_ind();
     p_all = p_all & test_xyz_to_ijk();
+
+    test_matrix();
 
     printf("Passed all unit tests ---> ");
     if (p_all) {
