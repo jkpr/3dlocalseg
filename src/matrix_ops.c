@@ -7,6 +7,18 @@ double get_min_side(xyz a)
     return min2;
 }
 
+float get_min(float a, float b)
+{
+    float min = a <= b ? a : b;
+    return min;
+}
+
+float get_max(float a, float b)
+{
+    float max = a >= b ? a : b;
+    return max;
+}
+
 int get_sum_sides(ijk a)
 {
     int this_sum = a.i + a.j + a.k;
@@ -219,4 +231,29 @@ long_arr get_radius_inds(long voxel, long seed, xyz voxel_dim, ijk volume_dim)
     la.ptr = r_inds;
     la.size = r_inds_size;
     return la;
+}
+
+long get_edge_ind(long_arr la, short * data, int cutoff) {
+    long edge_ind = la.size - 1;
+    for (int ind = 1; ind < la.size; ind++) {
+        long tmp_ind = la.ptr[ind];
+        if (data[tmp_ind] >= cutoff) {
+            edge_ind = ind;
+        }
+    }
+    return edge_ind;
+}
+
+void fill_in_ratio(long edge_ind, long seed, long_arr la, float * ratio_data, xyz voxel_dim, ijk volume_dim) {
+    xyz edge_xyz = ind_to_xyz(edge_ind, voxel_dim, volume_dim);
+    xyz seed_xyz = ind_to_xyz(seed, voxel_dim, volume_dim);
+    double seed_edge_distance = get_distance(edge_xyz, seed_xyz);
+    for (int i = 0; i < la.size; i++) {
+        long data_ind = la.ptr[i];
+        
+        xyz voxel_xyz = ind_to_xyz(data_ind, voxel_dim, volume_dim);
+        double seed_voxel_distance = get_distance(voxel_xyz, seed_xyz);
+        float this_ratio = seed_voxel_distance / seed_edge_distance;
+        ratio_data[data_ind] = get_max(this_ratio, ratio_data[data_ind]);
+    }
 }

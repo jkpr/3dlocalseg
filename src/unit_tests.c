@@ -177,7 +177,7 @@ short test_matrix()
     ijk a = ind_to_ijk(seed, volume_dim);
     printf("ind to ijk, %ld to (%d, %d, %d)\n", seed, a.i, a.j, a.k);
     a = ind_to_ijk(voxel, volume_dim);
-    printf("ind to ijk, %ld to (%d, %d, %d)\n", seed, a.i, a.j, a.k);
+    printf("ind to ijk, %ld to (%d, %d, %d)\n", voxel, a.i, a.j, a.k);
 
 
 
