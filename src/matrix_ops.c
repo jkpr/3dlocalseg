@@ -244,7 +244,8 @@ long get_edge_ind(long_arr la, short * data, int cutoff) {
     return edge_ind;
 }
 
-void fill_in_ratio(long edge_ind, long seed, long_arr la, float * ratio_data, xyz voxel_dim, ijk volume_dim) {
+void fill_in_ratio(long edge_ind, long_arr la, float * ratio_data, xyz voxel_dim, ijk volume_dim) {
+    long seed = la.ptr[0];
     xyz edge_xyz = ind_to_xyz(edge_ind, voxel_dim, volume_dim);
     xyz seed_xyz = ind_to_xyz(seed, voxel_dim, volume_dim);
     double seed_edge_distance = get_distance(edge_xyz, seed_xyz);
@@ -256,4 +257,97 @@ void fill_in_ratio(long edge_ind, long seed, long_arr la, float * ratio_data, xy
         float this_ratio = seed_voxel_distance / seed_edge_distance;
         ratio_data[data_ind] = get_max(this_ratio, ratio_data[data_ind]);
     }
+}
+
+void calculate_rr(long voxel, long seed, short * data, float * ratio_data, xyz voxel_dim, ijk volume_dim, int cutoff)
+{
+    long_arr la = get_radius_inds(voxel, seed, voxel_dim, volume_dim);
+    long edge_ind = get_edge_ind(la, data, cutoff);
+    fill_in_ratio(edge_ind, la, ratio_data, voxel_dim, volume_dim);
+    free(la.ptr);
+}
+
+void calculate_face_rr(long seed, short * data, float * ratio_data, xyz voxel_dim, ijk volume_dim, int cutoff, int face)
+{
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    switch(face) {
+        case 0:
+            for (j = 0; j < volume_dim.j; j++) {
+                for (k = 0; k < volume_dim.k; k++) {
+                    long voxel = ijk_to_ind((ijk){i,j,k}, volume_dim);
+                    if (ratio_data[voxel] >= 0) {
+                        calculate_rr(voxel, seed, data, ratio_data, voxel_dim, volume_dim, cutoff);
+                    }
+                }
+            }
+            break;
+        case 1:
+            i = volume_dim.i - 1;
+            for (int j = 0; j < volume_dim.j; j++) {
+                for (int k = 0; k < volume_dim.k; k++) {
+                    long voxel = ijk_to_ind((ijk){i,j,k}, volume_dim);
+                    if (ratio_data[voxel] >= 0) {
+                        calculate_rr(voxel, seed, data, ratio_data, voxel_dim, volume_dim, cutoff);
+                    }
+                }
+            }
+            break;
+        case 2:
+            for (i = 0; i < volume_dim.i; i++) {
+                for (k = 0; k < volume_dim.k; k++) {
+                    long voxel = ijk_to_ind((ijk){i,j,k}, volume_dim);
+                    if (ratio_data[voxel] >= 0) {
+                        calculate_rr(voxel, seed, data, ratio_data, voxel_dim, volume_dim, cutoff);
+                    }
+                }
+            }
+            break;
+        case 3:
+            j = volume_dim.j - 1;
+            for (i = 0; i < volume_dim.i; i++) {
+                for (k = 0; k < volume_dim.k; k++) {
+                    long voxel = ijk_to_ind((ijk){i,j,k}, volume_dim);
+                    if (ratio_data[voxel] >= 0) {
+                        calculate_rr(voxel, seed, data, ratio_data, voxel_dim, volume_dim, cutoff);
+                    }
+                }
+            }
+            break;
+        case 4:
+            for (i = 0; i < volume_dim.i; i++) {
+                for (j = 0; j < volume_dim.j; j++) {
+                    long voxel = ijk_to_ind((ijk){i,j,k}, volume_dim);
+                    if (ratio_data[voxel] >= 0) {
+                        calculate_rr(voxel, seed, data, ratio_data, voxel_dim, volume_dim, cutoff);
+                    }
+                }
+            }
+            break;
+        case 5:
+            k = volume_dim.k - 1;
+            for (i = 0; i < volume_dim.i; i++) {
+                for (j = 0; j < volume_dim.j; j++) {
+                    long voxel = ijk_to_ind((ijk){i,j,k}, volume_dim);
+                    if (ratio_data[voxel] >= 0) {
+                        calculate_rr(voxel, seed, data, ratio_data, voxel_dim, volume_dim, cutoff);
+                    }
+                }
+            }
+            break;
+        default:
+            printf("Unknown face side: %d\n", face);
+            break;
+    }
+}
+
+float * calculate_all_rr(long seed, short * data, xyz voxel_dim, ijk volume_dim, int cutoff)
+{
+    long nvox = volume_dim.i * volume_dim.j * volume_dim.k;
+    float * ratio_data = malloc(nvox * sizeof *ratio_data);
+    for (int face=0; face < 6; face++) {
+        calculate_face_rr(seed, data, ratio_data, voxel_dim, volume_dim, cutoff, face);
+    }
+    return ratio_data;
 }

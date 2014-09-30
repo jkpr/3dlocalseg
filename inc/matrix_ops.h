@@ -25,6 +25,9 @@ typedef struct
     int size;
 } long_arr;
 
+float get_min(float a, float b);
+float get_max(float a, float b);
+
 double get_min_side(xyz a);
 double get_distance(xyz a, xyz b);
 double get_distance_one(xyz a);
@@ -47,5 +50,11 @@ xyz ind_to_xyz(long ind, xyz voxel_dim, ijk volume_dim);
 int add_ind(long ind, long * r_inds, int r_inds_size);
 int is_inside_vol(xyz a, xyz voxel_dim, ijk volume_dim);
 long_arr get_radius_inds(long voxel, long seed, xyz voxel_dim, ijk volume_dim);
+long get_edge_ind(long_arr la, short * data, int cutoff);
+
+void fill_in_ratio(long edge_ind, long_arr la, float * ratio_data, xyz voxel_dim, ijk volume_dim);
+void calculate_rr(long voxel, long seed, short * data, float * ratio_data, xyz voxel_dim, ijk volume_dim, int cutoff);
+void calculate_face_rr(long seed, short * data, float * ratio_data, xyz voxel_dim, ijk volume_dim, int cutoff, int face);
+float * calculate_all_rr(long seed, short * data, xyz voxel_dim, ijk volume_dim, int cutoff);
 
 #endif
