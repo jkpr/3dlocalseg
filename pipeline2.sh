@@ -11,6 +11,7 @@ set FLAIR_NIFTI = flair_sag_vfl_1.nii.gz
 set CALC_RAGE_NIFTI = Calc_MPRAGE.nii.gz
 set MTC_NIFTI = mtc_on_{1.2,4.0,98.0}khz_500deg_10us_1.nii.gz
 # set PD_NIFTI = pd_t2_ax_tse_1.nii.gz
+# set T2_NIFTI = pd_t2_ax_tse_2.nii.gz
 
 # Destination AFNI files
 set WATER = wt
@@ -19,6 +20,7 @@ set FLAIR = fl
 set CALC_RAGE = t1_avg
 set MTC = mtc_
 # set PD = pd
+# set T2 = t2
 
 # Various suffixes for resulting files
 set THRESH = _th
@@ -43,6 +45,7 @@ set WT_TH = 78
 3dcopy $FLAIR_NIFTI $OD/$FLAIR
 3dcopy $CALC_RAGE_NIFTI $OD/$CALC_RAGE
 # 3dcopy $PD_NIFTI $OD/$PD
+# 3dcopy $T2_NIFTI $OD/$T2
 
 set i = 1
 while ($i <= $#T1_ECHO_NIFTI)
