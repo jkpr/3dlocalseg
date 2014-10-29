@@ -27,6 +27,7 @@ typedef struct
 
 float get_min(float a, float b);
 float get_max(float a, float b);
+float * get_min_max(float * a, size_t size);
 
 double get_min_side(xyz a);
 double get_distance(xyz a, xyz b);

@@ -219,6 +219,25 @@ void test_get_all_rr()
 
     int nvox = volume_dim.i*volume_dim.j*volume_dim.k;
 
+    float * ratio_data1 = malloc(nvox * sizeof *ratio_data1);
+    for (int i = 0; i < nvox; i++) ratio_data1[i] = -1;
+    int face = 0;
+    int cutoff = 0;
+    calculate_face_rr(seed, image, ratio_data1, voxel_dim, volume_dim, cutoff, face);
+    for(int i = 0; i < nvox; i++) {
+        
+        if ( i % 7 == 0) {
+            printf("\n");
+        }
+        if (i % 49 == 0) {
+            printf("\n");
+        }
+        printf("%+.3f,", ratio_data1[i]);
+    }
+    printf("\n\n");
+    free(ratio_data1);
+
+
     float * ptr = calculate_all_rr(seed, image, voxel_dim, volume_dim, 0);
     for(int i = 0; i < nvox; i++) {
         
@@ -242,6 +261,27 @@ void test_get_all_rr()
         }
         printf("%.2f,", ptr[i]);
     }
+
+    printf("\n\n");
+
+    float * ptr2 = calculate_all_rr(seed, image, voxel_dim, volume_dim, 1);
+
+    for(int i = 0; i < nvox; i++) {
+        if ( i % 7 == 0) {
+            printf("\n");
+        }
+        if (i % 49 == 0) {
+            printf("\n");
+        }
+        printf("%.2f,", ptr2[i]);
+    }
+
+    printf("\n\n");
+
+    free(ptr);
+    free(ptr2);
+
+    /*long voxel = ijk_to_ind()*/
 }
 
 int unit_tests()
