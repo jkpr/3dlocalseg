@@ -17,7 +17,7 @@ for(i in 1:nrow(mc_map)){
   mc_maplist[[paste0(mc_map[i,1], mc_map[i,2])]] <- mc_map[i,3]
 }
 
-write.table(cbind(paste0("Fitted:",mc_map$Fitted,"~Truth:",mc_map$Truth),mc_map$Value),file="labels.txt",row.names=FALSE,col.names=FALSE)
+write.table(cbind(paste0("Fitted:",mc_map$Fitted,"~Truth:",mc_map$Truth),mc_map$Value),row.names=FALSE,col.names=FALSE)
 
 get_confusion_matrix <- function(truth, fitted){
   # truth and fitted should be factor vectors with same levels

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run this with
-# qsub -N fr29 -l mem_free=20G,h_vmem=20G fsl_batch.sh
+# qsub -N fsl04 -l mem_free=20G,h_vmem=20G fsl_batch.sh
 
 # FSL Setup
 FSLDIR=/home/student/jpringle/fsl/fsl
