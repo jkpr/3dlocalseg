@@ -1,0 +1,9 @@
+3dAllineate -base t1_avg_alw+orig -master t1_avg_alw+orig -input frs_aseg_tmp+orig -1Dmatrix_apply frs_t1_alw.aff12.1D -prefix frs_aseg_alw -final NN
+
+3dAllineate -base t1_avg_alw+orig -master t1_avg_alw+orig -input frs_aseg_tmp+orig -1Dmatrix_apply frs_t1_alw.aff12.1D -prefix frs_aseg_alw -final NN
+
+
+3dAllineate -base t1_avg_alw+orig -master t1_avg_alw+orig -input frs_aseg_tmp+orig -1Dmatrix_apply frs_t1_tmpalw3_mat.aff12.1D -prefix frs_aseg_alw_1 -final NN
+3dAllineate -base t1_avg_alw+orig -master t1_avg_alw+orig -input frs_aseg_alw_1+orig -1Dmatrix_apply frs_t1_tmp_alw4.aff12.1D -prefix frs_aseg_alw -final NN
+
+3dAllineate -base t1_avg_alw+orig -master t1_avg_alw+orig -input frs_aseg_tmp+orig -1Dmatrix_apply frs_t1_alw.aff12.1D -prefix frs_aseg_alw -final NN

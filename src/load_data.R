@@ -88,3 +88,20 @@ get_data_info <- function(software=c("fsl","freesurfer","toads"))
     df <- data.frame(id=id,src=src,mask=mask, stringsAsFactors=FALSE)
     return(df)
 }
+
+get_roc_data_info <- function(subject=c("04","13","27","29"), 
+                              test=c("freesurfer", "fsl", "toads"),
+                              model=c("full","spline","primitive")) {
+    subject <- match.arg(subject)
+    test <- match.arg(test)
+    model <- match.arg(model)
+
+    src_dir <- paste0("~/.secret/NIH/",subject,"/",test,"_output")
+    mlr_file <- paste0(src_dir,"/mlr_",subject,"_",model,"_p+orig.HEAD")
+    seg_src_list <- list("freesurfer"="frs","toads"="toads","fsl"="fsl")
+    seg_src <- seg_src_list[[test]]
+    seg_file <- paste0(src_dir,"/",seg_src,"_seg+orig.HEAD")
+    
+    all_info <- list(seg=seg_file,mlr=mlr_file)
+    return(all_info)
+}

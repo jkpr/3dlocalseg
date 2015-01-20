@@ -1,0 +1,198 @@
+Running " spline " with subject 04 at 14:52:51+++ Starting training at 14:53:01# weights:  75 (48 variable)
+initial  value 5236495.923855
+iter  10 value 1957772.122388
+iter  20 value 1580811.362612
+iter  30 value 1449613.733026
+iter  40 value 890350.236474
+iter  50 value 662957.389626
+iter  60 value 649531.366634
+iter  70 value 648532.662254
+iter  80 value 648041.841947
+iter  90 value 647670.122285
+iter 100 value 647575.468311
+iter 110 value 647573.209300
+iter 120 value 647567.167581
+iter 130 value 647541.220922
+iter 140 value 647518.110025
+iter 150 value 647481.680844
+iter 160 value 647478.147965
+final  value 647477.911920
+converged
++++ Finished training at 15:32:49+++ Predicting now+++ Finished predicting at 15:33:02Running " spline " with subject 13 at 15:33:11+++ Starting training at 15:33:18# weights:  75 (48 variable)
+initial  value 5111031.104621
+iter  10 value 1993078.329744
+iter  20 value 1286306.370146
+iter  30 value 1111352.613145
+iter  40 value 756950.961639
+iter  50 value 611222.540867
+iter  60 value 577941.945088
+iter  70 value 576154.914493
+iter  80 value 574984.703601
+iter  90 value 574619.594849
+iter 100 value 574172.487970
+iter 110 value 574089.081805
+ iter 120 value 573880.780370
+iter 130 value 573697.358001
+iter 140 value 573600.846059
+iter 150 value 573477.708041
+final  value 573477.694091
+converged
++++ Finished training at 16:08:28+++ Predicting now+++ Finished predicting at 16:08:45Running " spline " with subject 27 at 16:08:55+++ Starting training at 16:09:02# weights:  75 (48 variable)
+initial  value 5057419.923533
+iter  10 value 1632115.798779
+iter  20 value 1432332.717206
+iter  30 value 1340316.498472
+iter  40 value 869831.617116
+iter  50 value 683324.368154
+iter  60 value 664333.057485
+iter  70 value 662003.539112
+iter  80 value 661604.411889
+iter  90 value 661246.951740
+iter 100 value 661182.105438
+iter 110 value 661161.555477
+iter 120 value 661118.539731
+iter 130 value 661072.922558
+iter 140 value 661036.861760
+iter 150 value 660990.271616
+iter 160 value 660983.879852
+final  value 660983.522178
+converged
++++ Finished training at 16:46:41+++ Predicting now+++ Finished predicting at 16:46:59Running " spline " with subject 29 at 16:47:10+++ Starting training at 16:47:17# weights:  75 (48 variable)
+initial  value 5157278.287536
+iter  10 value 1989259.530887
+iter  20 value 1569955.540708
+iter  30 value 1174861.877785
+iter  40 value 899308.771037
+iter  50 value 732045.229325
+iter  60 value 700831.364354
+iter  70 value 699064.715824
+iter  80 value 698760.542957
+iter  90 value 698098.613752
+iter 100 value 698072.214120
+iter 110 value 698068.352945
+iter 120 value 698062.637161
+iter 130 value 698039.409512
+iter 140 value 698019.048816
+iter 150 value 697976.940053
+iter 160 value 697970.590213
+iter 170 value 697970.150457
+iter 170 value 697970.145446
+iter 170 value 697970.145446
+final  value 697970.145446
+converged
++++ Finished training at 17:25:27+++ Predicting now+++ Finished predicting at 17:25:40
+
+> run_all_mlr("freesurfer")
+Running " spline " with subject 04 at 17:33:15+++ Starting training at 17:33:23# weights:  75 (48 variable)
+initial  value 3887495.612431
+iter  10 value 1612406.816596
+iter  20 value 1510063.772630
+iter  30 value 1188022.607771
+iter  40 value 916208.057132
+iter  50 value 748992.788382
+iter  60 value 730177.255109
+iter  70 value 726617.800346
+iter  80 value 726104.643950
+iter  90 value 725995.354514
+iter 100 value 725943.115770
+iter 110 value 725942.666033
+iter 120 value 725942.033306
+iter 130 value 725938.399538
+iter 140 value 725934.733724
+final  value 725934.386951
+converged
++++ Finished training at 17:57:54+++ Predicting now+++ Finished predicting at 17:58:06Running " spline " with subject 13 at 17:58:13+++ Starting training at 17:58:18# weights:  75 (48 variable)
+initial  value 4013081.278964
+iter  10 value 1700446.561736
+iter  20 value 1592983.033032
+iter  30 value 1262487.238109
+iter  40 value 877062.929875
+iter  50 value 756490.744872
+iter  60 value 735811.158705
+iter  70 value 733061.178001
+iter  80 value 732866.423014
+iter  90 value 732725.463663
+final  value 732710.107750
+converged
++++ Finished training at 18:13:41+++ Predicting now+++ Finished predicting at 18:13:50Running " spline " with subject 27 at 18:13:56+++ Starting training at 18:14:01# weights:  75 (48 variable)
+initial  value 3861471.684541
+iter  10 value 1091830.680827
+iter  20 value 1016745.806288
+iter  30 value 768035.493612
+iter  40 value 670005.698635
+iter  50 value 623990.941397
+iter  60 value 617455.383288
+iter  70 value 616793.264582
+iter  80 value 616677.119943
+iter  90 value 616651.296485
+final  value 616640.790501
+converged
++++ Finished training at 18:31:28+++ Predicting now+++ Finished predicting at 18:31:40Running " spline " with subject 29 at 18:31:48+++ Starting training at 18:31:53# weights:  75 (48 variable)
+initial  value 3887145.155111
+iter  10 value 1134376.811863
+iter  20 value 1077651.569210
+iter  30 value 841709.164660
+iter  40 value 736095.041546
+iter  50 value 706851.535601
+iter  60 value 700239.720948
+iter  70 value 699397.478608
+iter  80 value 699248.434155
+iter  90 value 699236.325814
+final  value 699223.896973
+converged
++++ Finished training at 18:47:21+++ Predicting now+++ Finished predicting at 18:47:32>
+
+> run_all_mlr("toads")
+Running " spline " with subject 04 at 17:36:02+++ Starting training at 17:36:24# weights:  75 (48 variable)
+initial  value 5336349.893410
+iter  10 value 1485567.094560
+iter  20 value 1339266.501022
+iter  30 value 1245615.439475
+iter  40 value 1146925.990737
+iter  50 value 1093480.198290
+iter  60 value 1077056.768940
+iter  70 value 1076393.409812
+iter  80 value 1076318.902830
+iter  90 value 1076315.685798
+final  value 1076315.584309
+converged
++++ Finished training at 18:03:17+++ Predicting now+++ Finished predicting at 18:03:43Running " spline " with subject 13 at 18:04:01+++ Starting training at 18:04:19# weights:  75 (48 variable)
+initial  value 5400116.646497
+iter  10 value 1550323.047972
+iter  20 value 1352941.714697
+iter  30 value 1301182.145169
+iter  40 value 1165209.849497
+iter  50 value 1091570.247840
+iter  60 value 1089839.979586
+iter  70 value 1089568.161882
+iter  80 value 1089525.187383
+iter  90 value 1089457.699925
+final  value 1089456.735554
+converged
++++ Finished training at 18:31:08+++ Predicting now+++ Finished predicting at 18:31:31Running " spline " with subject 27 at 18:31:50+++ Starting training at 18:32:10# weights:  75 (48 variable)
+initial  value 5235946.617711
+iter  10 value 1530613.066203
+iter  20 value 1375095.861241
+iter  30 value 1254679.213393
+iter  40 value 1141324.761927
+iter  50 value 1099917.499313
+iter  60 value 1092618.655772
+iter  70 value 1092458.979110
+iter  80 value 1092442.532733
+iter  90 value 1092441.240040
+final  value 1092441.218636
+converged
++++ Finished training at 18:57:13+++ Predicting now+++ Finished predicting at 18:57:36Running " spline " with subject 29 at 18:57:53+++ Starting training at 18:58:10# weights:  75 (48 variable)
+initial  value 5070585.693203
+iter  10 value 1297458.092313
+iter  20 value 1082421.564889
+iter  30 value 966860.747663
+iter  40 value 781374.698020
+iter  50 value 744551.761107
+iter  60 value 739486.601896
+iter  70 value 739256.040961
+iter  80 value 738501.923250
+iter  90 value 737984.304874
+final  value 737982.549326
+converged
++++ Finished training at 19:22:26+++ Predicting now+++ Finished predicting at 19:22:47>

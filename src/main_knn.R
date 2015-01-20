@@ -6,6 +6,8 @@ source("image_knn.R")
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 0)
 {
+    test <- "fsl"
+    
     array_id <- as.numeric(args[1])
     test_id <- ""
     if (1 <= array_id && array_id <= 20) {
@@ -19,13 +21,12 @@ if (length(args) != 0)
     }
     
     start_time <- Sys.time()
-    test_cl <- run_one_knn(test_id, "freesurfer")
+    test_cl <- run_one_knn(test_id, test)
     end_time <- Sys.time()
     diff_time <- end_time - start_time
     filename <- paste0("knn_arr_",array_id,".rda")
     save(start_time, end_time, diff_time, test_id, array_id, file=filename)
     
-    test <- "freesurfer"
     data_info <- get_data_info(test)
     data_row <- which(test_id == data_info$id)
     mask_file <- data_info[data_row,"mask"]

@@ -1,0 +1,128 @@
+> run_all_mlr("fsl")
+*+ WARNING:   If you are performing spatial transformations on an oblique dset,
+  such as /home/student/jpringle/.secret/NIH/27/fsl_seg+orig.BRIK,
+  or viewing/combining it with volumes of differing obliquity,
+  you should consider running:
+     3dWarp -deoblique
+  on this and  other oblique datasets in the same session.
+ See 3dWarp -help for details.
+++ Oblique dataset:/home/student/jpringle/.secret/NIH/27/fsl_seg+orig.BRIK is 5.177860 degrees from plumb.
+Running " full " with subject 04 at 08:10:50+++ Starting training at 08:10:57# weights:  42 (26 variable)
+initial  value 5236495.923855
+iter  10 value 1587593.897085
+iter  20 value 1530863.938893
+iter  30 value 1155722.932108
+iter  40 value 1126858.328334
+final  value 1126604.881554
+converged
++++ Finished training at 08:23:13+++ Predicting now+++ Finished predicting at 08:23:27Running " full " with subject 13 at 08:23:37+++ Starting training at 08:23:44# weights:  42 (26 variable)
+initial  value 5111031.104621
+iter  10 value 1508292.907821
+iter  20 value 1445580.281560
+iter  30 value 1099642.699911
+iter  40 value 1076771.460461
+final  value 1076444.472674
+converged
++++ Finished training at 08:35:52+++ Predicting now+++ Finished predicting at 08:36:09Running " full " with subject 27 at 08:36:20+++ Starting training at 08:36:27# weights:  42 (26 variable)
+initial  value 5057419.923533
+iter  10 value 1529090.719329
+iter  20 value 1405537.130019
+iter  30 value 946695.516418
+iter  40 value 835018.373695
+iter  50 value 832920.712574
+iter  60 value 832890.216057
+iter  70 value 832889.981582
+final  value 832889.963436
+converged
++++ Finished training at 08:56:47+++ Predicting now+++ Finished predicting at 08:57:04Running " full " with subject 29 at 08:57:17+++ Starting training at 08:57:25# weights:  42 (26 variable)
+initial  value 5157278.287536
+iter  10 value 1701413.929796
+iter  20 value 1639530.953781
+iter  30 value 1289307.261877
+iter  40 value 1177147.716141
+iter  50 value 1174092.855907
+final  value 1174084.374750
+converged
++++ Finished training at 09:11:42+++ Predicting now+++ Finished predicting at 09:11:57
+
+> run_all_mlr("freesurfer")
+Running " full " with subject 04 at 17:34:41+++ Starting training at 17:34:44# weights:  42 (26 variable)
+initial  value 3887495.612431
+iter  10 value 1050524.065873
+iter  20 value 811379.843118
+iter  30 value 762158.919005
+iter  40 value 746609.186227
+iter  50 value 746598.291054
+final  value 746598.133684
+converged
++++ Finished training at 17:42:08+++ Predicting now+++ Finished predicting at 17:42:18Running " full " with subject 13 at 17:42:24+++ Starting training at 17:42:27# weights:  42 (26 variable)
+initial  value 4013081.278964
+iter  10 value 1161920.125297
+iter  20 value 891310.673602
+iter  30 value 782153.621658
+iter  40 value 758200.020923
+iter  50 value 758152.253497
+final  value 758151.952722
+converged
++++ Finished training at 17:48:59+++ Predicting now+++ Finished predicting at 17:49:07Running " full " with subject 27 at 17:49:12+++ Starting training at 17:49:15# weights:  42 (26 variable)
+initial  value 3861471.684541
+iter  10 value 1251938.159564
+iter  20 value 821451.961774
+iter  30 value 660618.484215
+iter  40 value 631995.226846
+iter  50 value 630940.307820
+final  value 630931.748933
+converged
++++ Finished training at 17:57:32+++ Predicting now+++ Finished predicting at 17:57:43Running " full " with subject 29 at 17:57:50+++ Starting training at 17:57:53# weights:  42 (26 variable)
+initial  value 3887145.155111
+iter  10 value 934952.089015
+iter  20 value 835902.410155
+iter  30 value 741013.309916
+iter  40 value 716019.519840
+iter  50 value 716005.379353
+final  value 716005.285204
+converged
++++ Finished training at 18:05:05+++ Predicting now+++ Finished predicting at 18:05:14>
+
+> source("image_mlr.R")
+> run_all_mlr("toads")
+Running " full " with subject 04 at 19:47:50+++ Starting training at 19:48:00# weights:  42 (26 variable)
+initial  value 5336349.893410
+iter  10 value 1818439.944144
+iter  20 value 1649466.713606
+iter  30 value 1229407.605206
+iter  40 value 1150683.849078
+iter  50 value 1150471.218485
+final  value 1150468.220282
+converged
++++ Finished training at 20:01:26+++ Predicting now+++ Finished predicting at 20:01:38Running " full " with subject 13 at 20:01:47+++ Starting training at 20:01:54# weights:  42 (26 variable)
+initial  value 5400116.646497
+iter  10 value 1791451.500997
+iter  20 value 1622378.172660
+iter  30 value 1242777.057677
+iter  40 value 1166089.853756
+iter  50 value 1165902.853311
+final  value 1165895.696192
+converged
++++ Finished training at 20:14:33+++ Predicting now+++ Finished predicting at 20:14:47Running " full " with subject 27 at 20:14:57+++ Starting training at 20:15:04# weights:  42 (26 variable)
+initial  value 5235946.617711
+iter  10 value 1751538.152446
+iter  20 value 1583689.623327
+iter  30 value 1252505.632600
+iter  40 value 1169121.018160
+iter  50 value 1169059.918052
+final  value 1169058.615648
+converged
++++ Finished training at 20:27:26+++ Predicting now+++ Finished predicting at 20:27:40Running " full " with subject 29 at 20:27:50+++ Starting training at 20:27:57# weights:  42 (26 variable)
+initial  value 5070585.693203
+iter  10 value 2345729.031307
+iter  20 value 1832298.834713
+iter  30 value 944887.547193
+iter  40 value 753506.365370
+iter  50 value 738838.451698
+iter  60 value 738808.965481
+iter  70 value 738803.618538
+iter  80 value 738793.939097
+final  value 738793.474500
+converged
++++ Finished training at 20:47:14+++ Predicting now+++ Finished predicting at 20:47:33>

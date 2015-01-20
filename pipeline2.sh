@@ -10,8 +10,8 @@ set T1_ECHO_NIFTI = (t1_memprage_nib_?.nii.gz)
 set FLAIR_NIFTI = flair_sag_vfl_1.nii.gz
 set CALC_RAGE_NIFTI = Calc_MPRAGE.nii.gz
 set MTC_NIFTI = mtc_on_{1.2,4.0,98.0}khz_500deg_10us_1.nii.gz
-# set PD_NIFTI = pd_t2_ax_tse_1.nii.gz
-# set T2_NIFTI = pd_t2_ax_tse_2.nii.gz
+#set PD_NIFTI = pd_t2_ax_tse_1.nii.gz
+#set T2_NIFTI = pd_t2_ax_tse_2.nii.gz
 
 # Destination AFNI files
 set WATER = wt
@@ -19,8 +19,8 @@ set T1_ECHO = t1_
 set FLAIR = fl
 set CALC_RAGE = t1_avg
 set MTC = mtc_
-# set PD = pd
-# set T2 = t2
+#set PD = pd
+#set T2 = t2
 
 # Various suffixes for resulting files
 set THRESH = _th
@@ -44,8 +44,9 @@ set WT_TH = 78
 3dcopy $WATER_NIFTI $OD/$WATER
 3dcopy $FLAIR_NIFTI $OD/$FLAIR
 3dcopy $CALC_RAGE_NIFTI $OD/$CALC_RAGE
-# 3dcopy $PD_NIFTI $OD/$PD
-# 3dcopy $T2_NIFTI $OD/$T2
+
+#3dcopy $PD_NIFTI $OD/$PD
+#3dcopy $T2_NIFTI $OD/$T2
 
 set i = 1
 while ($i <= $#T1_ECHO_NIFTI)
@@ -64,6 +65,8 @@ cd ${OD}
 
 # B) Threshold the water image. This number is context-dependent
 3dcalc -a ${WATER}+orig -expr "step(a-${WT_TH})*a" -prefix ${WATER}${THRESH}
+# 3dcalc -a all_us+orig'[5]' -expr "step(a - ${WT_TH})" -prefix ${WATER}${THRESH}
+
 
 # C) Align Calc_MPRAGE to thresholded water image, then do the same 
 # transformation to T1 echo images, using same "box frame" as Calc_MPRAGE
@@ -90,6 +93,9 @@ end
 align_epi_anat.py -dset1 ${FLAIR}+orig -dset2 ${WATER}${THRESH}+orig \
                   -dset1_strip None -dset2_strip None -suffix ${ALIGN} \
                   -master_dset1 ${CALC_RAGE}+orig
+
+# 3dallineate -base ${CALC_RAGE}${ALIGN}+orig -master ${CALC_RAGE}${ALIGN}+orig -input ${PD}+orig -cost ls -prefix ${PD}${ALIGN} -1Dmatrix_save ${PD}${ALIGN}
+# 3dallineate -base ${CALC_RAGE}${ALIGN}+orig -master ${CALC_RAGE}${ALIGN}+orig -input ${T2}+orig -cost ls -prefix ${T2}${ALIGN}
 
 # TEST TO SEE IF ALIGNMENT WENT CORRECTLY
 3dresample -input ${WATER}+orig -master ${CALC_RAGE}${ALIGN}+orig \
@@ -123,6 +129,14 @@ foreach IMAGE (${T1_ECHO}?${ALIGN}+orig.HEAD ${MTC}?${ALIGN}+orig.HEAD \
     3dLocalstat -nbhd "SPHERE($RAD)" -stat perc:65:95:5 \
                 -datum short -reduce_max_vox 5 \
                 -prefix ${p}${LOC_STAT} ${p}${ZERO}+orig
+end
+
+# Cont'd) ...and the same for PD and T2
+foreach IMAGE (${PD}${ALIGN}+orig.HEAD ${T2}${ALIGN}+orig.HEAD)
+    set p = `ParseName -out Prefix $IMAGE`
+    3dLocalstat -nbhd "SPHERE($RAD)" -stat perc:90 \
+                -datum short -reduce_max_vox 5 \
+                -prefix ${p}${LOC_STAT} ${p}+orig
 end
 
 # Cont'd) ...and the same for water, since it doesn't have a "_z"
